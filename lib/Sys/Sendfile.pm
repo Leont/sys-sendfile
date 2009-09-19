@@ -1,28 +1,21 @@
 package Sys::Sendfile;
 
+# This software is copyright (c) 2008, 2009 by Leon Timmermans <leont@cpan.org>.
+#
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as perl itself.
+
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.09';
 
 use base qw/Exporter DynaLoader/;
 
+##no critic ProhibitAutomaticExportation
 our @EXPORT = qw/sendfile/;
 
 bootstrap Sys::Sendfile $VERSION;
-
-if (!defined &sendfile) {
-	eval <<'ENDF';
-	use Symbol qw/qualify_to_ref/;
-	use Fcntl;
-	sub sendfile(**;$) {
-		my ($pre_out, $pre_in, $size) = @_;
-		my ($out, $in) = map { qualify_to_ref($_ ) } $pre_out, $pre_in;
-		sysread $in, my ($buffer), $size;
-		syswrite $out, $buffer;
-	}
-ENDF
-}
 
 1;
 
@@ -34,28 +27,32 @@ Sys::Sendfile - Zero-copy data transfer
 
 =head1 VERSION
 
-Version 0.01
+Version 0.09
 
 =cut
 
 =head1 SYNOPSIS
 
- sendfile $out, $in;
+ use Sys::Sendfile qw/sendfile/;
+ sendfile $sink, $source, $count;
 
-=head1 EXPORT
+=head1 DESCRIPTION
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+Sys::Sendfile provides access to your operating system's C<sendfile> facility. It allows you to efficiently transfer data from one filehandle to another. Typically the source is a file on disk and the sink is a socket, and some operating systems may not even support other usage.
 
 =head1 FUNCTIONS
 
-=head2 sendfile
+=head2 sendfile $out, $in, $count
+
+This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count isn't given, it will send all remaining bytes in $in. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
 
 =head1 AUTHOR
 
 Leon Timmermans, C<< <leont at cpan.org> >>
 
-=head1 BUGS
+=head1 BUGS AND LIMITATIONS
+
+Not all operating systems support sendfile(). Currently Linux, FreeBSD and Solaris are supported.
 
 Please report any bugs or feature requests to C<bug-sys-sendfile at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Sys-Sendfile>.  I will be notified, and then you'll
@@ -66,7 +63,6 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Sys::Sendfile
-
 
 You can also look for information at:
 
@@ -90,11 +86,17 @@ L<http://search.cpan.org/dist/Sys-Sendfile>
 
 =back
 
+=head1 SEE ALSO
 
-=head1 ACKNOWLEDGEMENTS
+sendfile(2) - Your manpage on sendfile
 
+L<IO::Sendfile> - A sendfile implementation for Linux
 
-=head1 COPYRIGHT & LICENSE
+L<Sys::Syscall> - Another sendfile implementation for Linux
+
+L<Sys::Sendfile::FreeBSD> - A module implementing the FreeBSD variant of sendfile 
+
+=head1 COPYRIGHT AND LICENSE
 
 Copyright 2009 Leon Timmermans, all rights reserved.
 
