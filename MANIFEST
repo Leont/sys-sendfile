@@ -1,13 +1,8 @@
 Build.PL
 Changes
-LICENSE
-lib/Sys/Sendfile.pm
-lib/Sys/Sendfile.xs
-Makefile.PL
 MANIFEST
-META.yml
 README
+lib/Sys/Sendfile.pm
 t/00-load.t
-t/10-basics.t
 t/pod-coverage.t
 t/pod.t
