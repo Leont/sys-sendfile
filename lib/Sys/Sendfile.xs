@@ -28,6 +28,11 @@
 
 #ifdef _WIN32
 #include <mswsock.h>
+#ifdef USE_SOCKETS_AS_HANDLES
+#	define TO_SOCKET(x)	_get_osfhandle(x)
+#else
+#	define TO_SOCKET(x)	(x)
+#endif	/* USE_SOCKETS_AS_HANDLES */
 #endif
 
 #if !defined __linux__ && !defined __solaris__ && !defined __FreeBSD__ && !defined __APPLE__ && !defined _WIN32
@@ -86,14 +91,14 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 	}
 #elif defined _WIN32
 	{
-		HANDLE hFile = (HANDLE)_get_osfhandle(in);
+		HANDLE hFile = TO_SOCKET(in);
 		int ret;
 		if (SvOK(offset)) SetFilePointer(hFile, real_offset, NULL, FILE_BEGIN);
 		ret = TransmitFile(
-				out,
+				TO_SOCKET(out),
 				hFile,
 				count,
-				1,
+				0,
 				NULL,
 				NULL,
 				0);
