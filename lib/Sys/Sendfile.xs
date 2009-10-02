@@ -17,7 +17,9 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #endif
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
@@ -99,5 +101,8 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 			XSRETURN_EMPTY;
 		else
 			XSRETURN_IV(count);
+	}
 #endif
 	}
+	OUTPUT:
+		RETVAL
