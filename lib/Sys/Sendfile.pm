@@ -10,12 +10,13 @@ use warnings;
 
 our $VERSION = '0.09';
 
-use base qw/Exporter DynaLoader/;
+use base qw/Exporter/;
+use XSLoader;
 
 ##no critic ProhibitAutomaticExportation
 our @EXPORT = qw/sendfile/;
 
-bootstrap Sys::Sendfile $VERSION;
+XSLoader::load('Sys::Sendfile', $VERSION);
 
 1;
 
@@ -33,7 +34,7 @@ Version 0.09
 
 =head1 SYNOPSIS
 
- use Sys::Sendfile qw/sendfile/;
+ use Sys::Sendfile;
  sendfile $sink, $source, $count;
 
 =head1 DESCRIPTION
@@ -46,13 +47,15 @@ Sys::Sendfile provides access to your operating system's C<sendfile> facility. I
 
 This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count isn't given, it will send all remaining bytes in $in. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Leon Timmermans, C<< <leont at cpan.org> >>
+Leon Timmermans, C<< <leont at cpan.org> >> wrote the Linux FreeBSD and Solaris code.
+
+Kazuho Oku C<< <kazuhooku@gmail.com> >> wrote the Mac OS X code.
 
 =head1 BUGS AND LIMITATIONS
 
-Not all operating systems support sendfile(). Currently Linux, FreeBSD and Solaris are supported.
+Not all operating systems support sendfile(). Currently Linux, FreeBSD, Solaris and Mac OS X are supported.
 
 Please report any bugs or feature requests to C<bug-sys-sendfile at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Sys-Sendfile>.  I will be notified, and then you'll
