@@ -8,7 +8,7 @@ use Sys::Sendfile;
 use Fcntl 'SEEK_SET';
 use Socket;
 
-plan($^O eq 'solaris' ? (skip_all => 'can\'t sendfile over socketpair on Solaris, skipping tests for now') : (tests => 2));
+plan($^O eq 'solaris' or $^O eq 'MSWin32' ? (skip_all => 'can\'t sendfile over socketpair on Solaris or MSWin32, skipping tests for now') : (tests => 2));
 
 alarm 2;
 

@@ -17,14 +17,25 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #endif
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 
-#if !defined __linux__ && !defined __solaris__ && !defined __FreeBSD__ && !defined __APPLE__
+#ifdef _WIN32
+#include <mswsock.h>
+#ifdef USE_SOCKETS_AS_HANDLES
+#	define TO_SOCKET(x)	_get_osfhandle(x)
+#else
+#	define TO_SOCKET(x)	(x)
+#endif	/* USE_SOCKETS_AS_HANDLES */
+#endif
+
+#if !defined __linux__ && !defined __solaris__ && !defined __FreeBSD__ && !defined __APPLE__ && !defined _WIN32
 
 #ifdef __GNUC__
 #error Your operating system appears to be unsupported
@@ -44,7 +55,8 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 	SV* offset;
 	PROTOTYPE: **@
 	CODE:
-	off_t real_offset = SvOK(offset) ? SvUV(offset) : lseek(in, 0, SEEK_CUR);
+	{
+	off_t real_offset = SvOK(offset) ? SvUV(offset) : (off_t)lseek(in, 0, SEEK_CUR);
 #if defined linux || defined __solaris__
 	if (count == 0) {
 		struct stat info;
@@ -58,6 +70,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 			XSRETURN_EMPTY;
 		else
 			XSRETURN_IV(success);
+	}
 #elif defined __FreeBSD__
 	{
 		off_t bytes;
@@ -66,6 +79,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 			XSRETURN_EMPTY;
 		else
 			XSRETURN_IV(bytes);
+	}
 #elif defined __APPLE__
 	{
 		off_t bytes = count;
@@ -74,5 +88,26 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 			XSRETURN_EMPTY;
 		else
 			XSRETURN_IV(bytes);
+	}
+#elif defined _WIN32
+	{
+		HANDLE hFile = TO_SOCKET(in);
+		int ret;
+		if (SvOK(offset)) SetFilePointer(hFile, real_offset, NULL, FILE_BEGIN);
+		ret = TransmitFile(
+				TO_SOCKET(out),
+				hFile,
+				count,
+				0,
+				NULL,
+				NULL,
+				0);
+		if (!ret)
+			XSRETURN_EMPTY;
+		else
+			XSRETURN_IV(count);
+	}
 #endif
 	}
+	OUTPUT:
+		RETVAL

@@ -1,6 +1,7 @@
 use 5.006;
 use strict;
 use warnings;
+use Config;
 use Module::Build;
 
 my $builder = Module::Build->new(
@@ -24,6 +25,14 @@ my $builder = Module::Build->new(
     sign                => 1,
 );
 
+if ($^O eq 'MSWin32') {
+    my $cc = $Config{cc};
+    my $type = ($cc =~ /cl(\.exe)?$/ ? 'MSVC'
+	  : $cc =~ /bcc32(\.exe)?$/ ? 'BCC'
+	  : 'GCC');
+    $builder->extra_linker_flags('mswsock.lib') if $type eq 'MSVC';
+    $builder->extra_linker_flags('-lmswsock') if $type eq 'GCC';
+}
 $builder->extra_linker_flags('-lsendfile') if $^O eq 'solaris';
 
 $builder->create_build_script();
