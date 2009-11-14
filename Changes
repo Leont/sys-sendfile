@@ -1,5 +1,8 @@
 Revision history for Sys-Sendfile
 
+0.10    2009-11-14
+        Port to Windows, by Yasuhiro Matsumoto
+
 0.09    2009-09-19
         Port to macosx, by Kazuho Oku
 
