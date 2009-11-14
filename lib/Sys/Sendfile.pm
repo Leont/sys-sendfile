@@ -8,7 +8,7 @@ package Sys::Sendfile;
 use strict;
 use warnings;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use base qw/Exporter/;
 use XSLoader;
@@ -28,7 +28,7 @@ Sys::Sendfile - Zero-copy data transfer
 
 =head1 VERSION
 
-Version 0.09
+Version 0.10
 
 =cut
 
@@ -55,7 +55,7 @@ Kazuho Oku C<< <kazuhooku@gmail.com> >> wrote the Mac OS X code.
 
 =head1 BUGS AND LIMITATIONS
 
-Not all operating systems support sendfile(). Currently Linux, FreeBSD, Solaris and Mac OS X are supported.
+Not all operating systems support sendfile(). Currently Linux, FreeBSD, Solaris, Mac OS X and Windows are supported.
 
 Please report any bugs or feature requests to C<bug-sys-sendfile at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Sys-Sendfile>.  I will be notified, and then you'll

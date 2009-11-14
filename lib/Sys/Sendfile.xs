@@ -72,34 +72,28 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 			XSRETURN_IV(success);
 	}
 #elif defined __FreeBSD__
-	{
-		off_t bytes;
-		int ret = sendfile(in, out, real_offset, count, NULL, &bytes, 0);
-		if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
-			XSRETURN_EMPTY;
-		else
-			XSRETURN_IV(bytes);
-	}
+	off_t bytes;
+	int ret = sendfile(in, out, real_offset, count, NULL, &bytes, 0);
+	if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
+		XSRETURN_EMPTY;
+	else
+		XSRETURN_IV(bytes);
 #elif defined __APPLE__
-	{
-		off_t bytes = count;
-		int ret = sendfile(in, out, real_offset, &bytes, NULL, 0);
-		if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
-			XSRETURN_EMPTY;
-		else
-			XSRETURN_IV(bytes);
-	}
+	off_t bytes = count;
+	int ret = sendfile(in, out, real_offset, &bytes, NULL, 0);
+	if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
+		XSRETURN_EMPTY;
+	else
+		XSRETURN_IV(bytes);
 #elif defined _WIN32
-	{
-		HANDLE hFile = TO_SOCKET(in);
-		int ret;
-		if (SvOK(offset))
-			SetFilePointer(hFile, real_offset, NULL, FILE_BEGIN);
-		ret = TransmitFile(TO_SOCKET(out), hFile, count, 0, NULL, NULL, 0);
-		if (!ret)
-			XSRETURN_EMPTY;
-		else
-			XSRETURN_IV(count);
-	}
+	HANDLE hFile = TO_SOCKET(in);
+	int ret;
+	if (SvOK(offset))
+		SetFilePointer(hFile, real_offset, NULL, FILE_BEGIN);
+	ret = TransmitFile(TO_SOCKET(out), hFile, count, 0, NULL, NULL, 0);
+	if (!ret)
+		XSRETURN_EMPTY;
+	else
+		XSRETURN_IV(count);
 #endif
 	}
