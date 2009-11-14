@@ -3,16 +3,22 @@
 use strict;
 use warnings;
 use Socket;
-use Test::More;
+use Test::More tests => 2;
 use Sys::Sendfile;
 use Fcntl 'SEEK_SET';
 use Socket;
-
-plan($^O eq 'solaris' or $^O eq 'MSWin32' ? (skip_all => 'can\'t sendfile over socketpair on Solaris or MSWin32, skipping tests for now') : (tests => 2));
+use IO::Socket::INET;
 
 alarm 2;
 
-socketpair my ($in), my ($out), AF_UNIX, SOCK_STREAM, PF_UNSPEC or die "Couldn't open socketpair: $!\n";
+sub socket_pair {
+	my $bound = IO::Socket::INET->new(Listen => 1, ReuseAddr => 1) or die "Couldn't make listening socket: $!";
+	my $in = IO::Socket::INET->new(PeerHost => $bound->sockhost, PeerPort => $bound->sockport) or die "Couldn't make input socket: $!";
+	my $out = $bound->accept;
+	return ($in, $out);
+}
+
+my ($in, $out) = socket_pair;
 
 open my $self, '<', $0 or die "Couldn't open self: $!";
 my $slurped = do { local $/; <$self> };
