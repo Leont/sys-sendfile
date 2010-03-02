@@ -1,5 +1,8 @@
 Revision history for Sys-Sendfile
 
+0.11    2010-03-02
+        Fixed unit test on Windows
+
 0.10    2009-11-14
         Port to Windows, by Yasuhiro Matsumoto
 

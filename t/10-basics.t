@@ -12,7 +12,7 @@ use IO::Socket::INET;
 alarm 2;
 
 sub socket_pair {
-	my $bound = IO::Socket::INET->new(Listen => 1, ReuseAddr => 1) or die "Couldn't make listening socket: $!";
+	my $bound = IO::Socket::INET->new(Listen => 1, ReuseAddr => 1, LocalAddr => 'localhost') or die "Couldn't make listening socket: $!";
 	my $in = IO::Socket::INET->new(PeerHost => $bound->sockhost, PeerPort => $bound->sockport) or die "Couldn't make input socket: $!";
 	my $out = $bound->accept;
 	return ($in, $out);
