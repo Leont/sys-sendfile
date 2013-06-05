@@ -8,7 +8,7 @@ package Sys::Sendfile;
 use strict;
 use warnings;
 
-use base qw/Exporter/;
+use Exporter 5.57 'import';
 use XSLoader;
 
 ##no critic ProhibitAutomaticExportation
