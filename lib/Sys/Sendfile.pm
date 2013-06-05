@@ -37,6 +37,8 @@ This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count i
 
 Kazuho Oku C<< <kazuhooku@gmail.com> >> wrote the Mac OS X code.
 
+Yasuhiro Matsumoto C<< <mattn.jp@gmail.com> >> wrote the Win32 code.
+
 =head1 BUGS AND LIMITATIONS
 
 Not all operating systems support sendfile(). Currently Linux, FreeBSD, Solaris, Mac OS X (version 10.5 and up) and Windows are supported.
