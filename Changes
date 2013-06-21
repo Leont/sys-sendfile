@@ -2,6 +2,7 @@ Revision history for Sys-Sendfile
 
 {{$NEXT}}
           Switched to Dist::Zilla
+          Also support GNU/kFreeBSD
 
 0.11    2010-03-02
         Fixed unit test on Windows

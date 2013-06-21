@@ -35,7 +35,7 @@
 #endif	/* USE_SOCKETS_AS_HANDLES */
 #endif
 
-#if !defined __linux__ && !defined __solaris__ && !defined __FreeBSD__ && !defined __APPLE__ && !defined _WIN32
+#if !defined __linux__ && !defined __solaris__ && !defined __FreeBSD__ && !defined(__FreeBSD_kernel__) && !defined __APPLE__ && !defined _WIN32
 
 #ifdef __GNUC__
 #error Your operating system appears to be unsupported
@@ -71,7 +71,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 		else
 			XSRETURN_IV(success);
 	}
-#elif defined __FreeBSD__
+#elif defined __FreeBSD__ || defined(__FreeBSD_kernel__)
 	off_t bytes;
 	int ret = sendfile(in, out, real_offset, count, NULL, &bytes, 0);
 	if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
