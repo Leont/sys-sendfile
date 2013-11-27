@@ -24,35 +24,28 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#endif
-
-#ifndef _MSC_VER
-#include <unistd.h>
-#endif
-
-#define PERL_NO_GET_CONTEXT
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
-
-#ifdef OS_WIN32
+#elif defined OS_WIN32
 #include <mswsock.h>
 #ifdef USE_SOCKETS_AS_HANDLES
 #	define TO_SOCKET(x)	_get_osfhandle(x)
 #else
 #	define TO_SOCKET(x)	(x)
 #endif	/* USE_SOCKETS_AS_HANDLES */
-#endif
-
-#if !defined OS_LINUX && !defined OS_BSD && !defined OS_X && !defined OS_WIN32
-
-#ifdef __GNUC__
-#error Your operating system appears to be unsupported
 #else
-Your operating system appears to be unsupported;
+#include <sys/mman.h>
 #endif
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#ifndef MAP_FILE
+#define MAP_FILE 0
 #endif
+#endif
+
+#define PERL_NO_GET_CONTEXT
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
 
 MODULE = Sys::Sendfile				PACKAGE = Sys::Sendfile
 
@@ -104,5 +97,22 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 		XSRETURN_EMPTY;
 	else
 		XSRETURN_IV(count);
+#else
+	void* buffer;
+	int ret;
+	if (count == 0) {
+		struct stat info;
+		if (fstat(in, &info) == -1)
+			XSRETURN_EMPTY;
+		count = info.st_size - real_offset;
+	}
+	buffer = mmap(NULL, count, PROT_READ, MAP_SHARED | MAP_FILE, in, real_offset);
+	if (buffer == MAP_FAILED)
+		XSRETURN_EMPTY;
+	ret = write(out, buffer, count);
+	if (ret == -1)
+		XSRETURN_EMPTY;
+	else
+		XSRETURN_IV(ret);
 #endif
 	}
