@@ -62,7 +62,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 #if defined OS_LINUX
 	if (count == 0) {
 		struct stat info;
-		if (fstat(in, &info) == -1) 
+		if (fstat(in, &info) == -1)
 			XSRETURN_EMPTY;
 		count = info.st_size - real_offset;
 	}
@@ -76,14 +76,14 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 #elif defined OS_BSD
 	off_t bytes;
 	int ret = sendfile(in, out, real_offset, count, NULL, &bytes, 0);
-	if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
+	if (ret == -1 && bytes == 0 && ! (errno == EAGAIN || errno == EINTR))
 		XSRETURN_EMPTY;
 	else
 		XSRETURN_IV(bytes);
 #elif defined OS_X
 	off_t bytes = count;
 	int ret = sendfile(in, out, real_offset, &bytes, NULL, 0);
-	if (ret == -1 && ! (errno == EAGAIN || errno == EINTR))
+	if (ret == -1 && bytes == 0 && ! (errno == EAGAIN || errno == EINTR))
 		XSRETURN_EMPTY;
 	else
 		XSRETURN_IV(bytes);

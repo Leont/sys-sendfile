@@ -31,7 +31,7 @@ Sys::Sendfile provides access to your operating system's C<sendfile> facility. I
 
 =func sendfile $out, $in, $count
 
-This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count isn't given, it will send all remaining bytes in $in. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
+This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count isn't given, it will try send all remaining bytes in $in, but on some operating systems sending only part of the bytes is a possible result. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
 
 =head1 CONTRIBUTORS
 
