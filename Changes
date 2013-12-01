@@ -1,6 +1,8 @@
 Revision history for Sys-Sendfile
 
 {{$NEXT}}
+
+0.12      2013-12-02 00:24:06 Europe/Amsterdam
           Switched to Dist::Zilla
           Also support GNU/kFreeBSD
 
