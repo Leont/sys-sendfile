@@ -29,9 +29,9 @@ XSLoader::load('Sys::Sendfile', __PACKAGE__->VERSION);
 
 Sys::Sendfile provides access to your operating system's C<sendfile> facility. It allows you to efficiently transfer data from one filehandle to another. Typically the source is a file on disk and the sink is a socket, and some operating systems may not even support other usage.
 
-=func sendfile $out, $in, $count
+=func sendfile $out, $in, $count, $offset
 
-This function sends up to C<$count> B<bytes> from C<$in> to C<$out>. If $count isn't given, it will try send all remaining bytes in $in, but on some operating systems sending only part of the bytes is a possible result. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
+This function sends up to C<$count> B<bytes> starting from C<$offset> from C<$in> to C<$out>. If $count isn't given, it will try send all remaining bytes in $in, but on some operating systems sending only part of the bytes is a possible result. If C<$offset> isn't given, the function will get current offset of C<$in> (by calling lseek) and pass this information to underlying sendfile syscall. C<$in> and C<$out> can be a bareword, constant, scalar expression, typeglob, or a reference to a typeglob. It returns the number of bytes actually sent. On error, C<$!> is set appropriately and it returns undef. This function is exported by default.
 
 =head1 CONTRIBUTORS
 
