@@ -25,7 +25,7 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #elif defined OS_WIN32
-#include <mswsock.h>
+#include <windows.h>
 #ifdef USE_SOCKETS_AS_HANDLES
 #	define TO_SOCKET(x)	_get_osfhandle(x)
 #else

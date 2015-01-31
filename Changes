@@ -1,6 +1,7 @@
 Revision history for Sys-Sendfile
 
 {{$NEXT}}
+          Fix compilation issue on Windows
           Document $offset parameter
 
 0.12      2013-12-02 00:24:06 Europe/Amsterdam
