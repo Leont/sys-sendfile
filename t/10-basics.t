@@ -18,14 +18,14 @@ my $slurped = do { local $/; <$self> };
 seek $self, 0, SEEK_SET or die "Could not seek: $!";
 
 my $size = -s $self;
-is(sendfile($out, $self, $size), $size, "Wrote $size bytes when asked to send the whole file");
+is(sendfile($out, $self, $size), $size, "Wrote $size bytes when asked to send the whole file") or diag "Error message: $!";
 defined recv $in, my $read, -s $self, 0 or die "Couldn't receive: $!";
 
 is($read, $slurped, "Read the same as was written");
 
 seek $self, 0, SEEK_SET or die "Could not seek: $!";
 
-is(sendfile($out, $self), $size, "Wrote $size bytes when asked to send the whole file");
+is(sendfile($out, $self), $size, "Wrote $size bytes when asked to send the whole file") or diag "Error message: $!";
 defined recv $in, $read, -s $self, 0 or die "Couldn't receive: $!";
 
 is($read, $slurped, "Read the same as was written");
