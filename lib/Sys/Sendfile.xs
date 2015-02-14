@@ -26,6 +26,7 @@
 #include <sys/uio.h>
 #elif defined OS_WIN32
 #include <windows.h>
+#include <mswsock.h>
 #ifdef USE_SOCKETS_AS_HANDLES
 #	define TO_SOCKET(x)	_get_osfhandle(x)
 #else
