@@ -62,7 +62,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 	PROTOTYPE: **@
 	CODE:
 	{
-	off_t real_offset = SvOK(offset) ? SvUV(offset) : (off_t)lseek(in, 0, SEEK_CUR);
+	Off_t real_offset = SvOK(offset) ? SvUV(offset) : (off_t)lseek(in, 0, SEEK_CUR);
 #if defined OS_LINUX
 	if (count == 0) {
 		struct stat info;
