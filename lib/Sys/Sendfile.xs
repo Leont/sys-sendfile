@@ -30,11 +30,11 @@
 #elif defined OS_WIN32
 #include <windows.h>
 #include <mswsock.h>
-#ifdef USE_SOCKETS_AS_HANDLES
-#	define TO_SOCKET(x)	_get_osfhandle(x)
+#if defined(USE_SOCKETS_AS_HANDLES) || PERL_VERSION_ATLEAST(5,17,5)
+#  define TO_SOCKET(x) _get_osfhandle(x)
 #else
-#	define TO_SOCKET(x)	(x)
-#endif	/* USE_SOCKETS_AS_HANDLES */
+#  define TO_SOCKET(x) (x)
+#endif /* USE_SOCKETS_AS_HANDLES */
 #else
 #include <sys/mman.h>
 #endif
@@ -96,7 +96,7 @@ sendfile(out, in, count = 0, offset = &PL_sv_undef)
 	int ret;
 	if (SvOK(offset))
 		SetFilePointer(hFile, real_offset, NULL, FILE_BEGIN);
-	ret = TransmitFile(TO_SOCKET(out), hFile, count, 0, NULL, NULL, 0);
+	ret = TransmitFile(TO_SOCKET(out), hFile, (DWORD)count, 0, NULL, NULL, 0);
 	if (!ret)
 		XSRETURN_EMPTY;
 	else
