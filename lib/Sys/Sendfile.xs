@@ -29,7 +29,9 @@
 #endif
 #elif defined OS_WIN32
 #include <windows.h>
+#ifndef _MSC_VER
 #include <mswsock.h>
+#endif
 #if defined(USE_SOCKETS_AS_HANDLES) || PERL_VERSION_ATLEAST(5,17,5)
 #  define TO_SOCKET(x) _get_osfhandle(x)
 #else
