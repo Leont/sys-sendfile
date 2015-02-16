@@ -1,6 +1,8 @@
 Revision history for Sys-Sendfile
 
 {{$NEXT}}
+
+0.15      2015-02-16 01:09:00+01:00 Europe/Amsterdam
           Convert descriptors to handles correctly on Windows
 
 0.14      2015-02-14 16:29:03+01:00 Europe/Amsterdam
