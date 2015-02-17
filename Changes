@@ -1,6 +1,8 @@
 Revision history for Sys-Sendfile
 
 {{$NEXT}}
+
+0.16      2015-02-17 16:34:45+01:00 Europe/Amsterdam
           Moved PERL_VERSION_ATLEAST to after perl headers
 
 0.15      2015-02-16 01:09:00+01:00 Europe/Amsterdam
