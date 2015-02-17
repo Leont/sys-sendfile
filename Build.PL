@@ -18,5 +18,9 @@ if ($^O eq 'MSWin32') {
 elsif ($^O eq 'solaris') {
 	$builder->extra_linker_flags('-lsendfile');
 }
+elsif($^O eq 'gnukfreebsd') {
+	$builder->extra_compiler_flags('-I/usr/include/freebsd');
+	$builder->extra_linker_flags('-lfreebsd-glue');
+}
 
 $builder->create_build_script();

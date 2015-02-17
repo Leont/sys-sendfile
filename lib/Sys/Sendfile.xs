@@ -24,9 +24,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#ifdef __FreeBSD_kernel__
-#define sendfile bsd_sendfile
-#endif
 #elif defined OS_WIN32
 #include <windows.h>
 #ifndef _MSC_VER
