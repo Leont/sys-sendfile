@@ -32,11 +32,6 @@
 #ifndef _MSC_VER
 #include <mswsock.h>
 #endif
-#if defined(USE_SOCKETS_AS_HANDLES) || PERL_VERSION_ATLEAST(5,17,5)
-#  define TO_SOCKET(x) _get_osfhandle(x)
-#else
-#  define TO_SOCKET(x) (x)
-#endif /* USE_SOCKETS_AS_HANDLES */
 #else
 #include <sys/mman.h>
 #endif
@@ -52,6 +47,16 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+
+#define PERL_VERSION_ATLEAST(a,b,c)                        \
+    (PERL_VERSION > (b)                                    \
+     || (PERL_VERSION == (b) && PERL_SUBVERSION >= (c)))
+
+#if defined(USE_SOCKETS_AS_HANDLES) || PERL_VERSION_ATLEAST(5,17,5)
+#  define TO_SOCKET(x) _get_osfhandle(x)
+#else
+#  define TO_SOCKET(x) (x)
+#endif /* USE_SOCKETS_AS_HANDLES */
 
 MODULE = Sys::Sendfile				PACKAGE = Sys::Sendfile
 

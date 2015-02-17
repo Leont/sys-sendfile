@@ -1,6 +1,7 @@
 Revision history for Sys-Sendfile
 
 {{$NEXT}}
+          Moved PERL_VERSION_ATLEAST to after perl headers
 
 0.15      2015-02-16 01:09:00+01:00 Europe/Amsterdam
           Convert descriptors to handles correctly on Windows
